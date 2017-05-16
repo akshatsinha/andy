@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  WebView
+  WebView,
+  Image
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -18,6 +19,7 @@ export default class Andy extends Component {
     forwardButtonEnabled: false,
     loading: true,
     scalesPageToFit: true,
+    isImage: false
   }
 
   constructor(props) {
@@ -35,7 +37,8 @@ export default class Andy extends Component {
           if (toOpen != this.state.url) {
             this.setState({
               url: toOpen,
-              text_for_html: res.text_for_html
+              text_for_html: res.text_for_html,
+              isImage: toOpen === 'http://reallancastercounty.com/wp-content/uploads/2012/03/auction-bid-2-lg-gt_full_width_landscape.jpg' ? true : false
             });
           }
         })
@@ -48,17 +51,29 @@ export default class Andy extends Component {
   render() {
     return (
 
-        <View style={{flex: 1}}>
-          <WebView
-            onLoad={this.onWebLoad.bind(this)}
-            source={{uri: this.state.url}}
-            style={{marginBottom: 0, flex: 1}}
-            scalesPageToFit={true}
-          />
+        <View style={{flex: 1, paddingTop: 23}}>
+          {
+            !this.state.isImage &&
+            <WebView
+              onLoad={this.onWebLoad.bind(this)}
+              source={{uri: this.state.url}}
+              style={{marginBottom: 0, flex: 1}}
+              scalesPageToFit={true}
+            />
+          }
+
+          {
+            this.state.isImage &&
+            <Image
+              source={{uri: this.state.url}}
+              style={{resizeMode: "cover", flex: 1}}
+            />
+          }
+
           <View style={{backgroundColor: '#ffe300', height: 3}} />
 
-          <View style={{backgroundColor: '#e6eff4', height: 50, alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={{color: '#0d024a', fontFamily: 'Arial'}}>{this.state.text_for_html}</Text>
+          <View style={{backgroundColor: '#e6eff4', height: 150, alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={{color: '#0d024a', fontFamily: 'Arial', fontSize: 36}}>{this.state.text_for_html}</Text>
           </View>
 
         </View>
